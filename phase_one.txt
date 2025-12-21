@@ -1,0 +1,230 @@
+PHASE 1
+
+Success criteria (make it testable)
+Treat these as “definition of done” for v1:
+
+Global + regional availability
+Site loads fast from Toronto and outside Canada (CDN/edge).
+No single-server bottleneck.
+Performance
+Home page loads in ~1–2 seconds on normal mobile data.
+Buttons/links respond instantly (no jank).
+Images optimized + lazy loaded.
+Maintainability
+Clear component structure.
+Consistent patterns (forms, buttons, fetch, errors).
+Easy to add a new page/section in <30 minutes.
+Content operability
+You can publish/edit content without touching code (or with minimal code).
+CMS integration is “plug-in” not “rebuild”.
+Cost
+Hosting close to $0–$20/month while you’re learning.
+Avoid always-on servers unless needed.
+Low bloat / low tech debt
+Minimal dependencies.
+Simple architecture (one repo, clear boundaries).
+The best “modern” stack for those goals
+If your goal is a well-built modern site (fast, global, editable, cheap):
+
+Next.js (React) + a Headless CMS + Postgres (optional)
+Next.js gives you:
+
+SSR/SSG for speed + SEO
+API routes (you can still use Node)
+easy deployment + edge/CDN benefits
+CMS gives you content editing (no code to publish)
+
+For v1: Sanity or Contentful (easy), or Strapi (self-hosted)
+DB only if you actually need app features
+
+Otherwise you can skip DB entirely for v1
+Where Three.js / GSAP fit
+GSAP: add after your base site is solid (motion polish).
+Three.js: add only for one section (hero / product viewer), not the whole site.
+Blender: only if you’re creating your own 3D assets (later).
+Framer: good for fast landing pages, but it’s not “backend well-designed.” Use it optionally for marketing experiments.
+A learning plan that doesn’t set you up for failure
+Phase 1 — Ship a “boring, perfect” site (1 project)
+Goal: global, fast, editable, cheap.
+
+Build:
+
+Home
+About
+Blog/Insights (CMS-driven)
+Contact form (sends email + saves submission)
+You’ll learn:
+
+Next.js fundamentals (routing, server/client components if using App Router)
+Data fetching patterns
+Forms + validation
+Deploy pipeline
+CMS integration
+Phase 2 — Add “real backend” (only if needed)
+Goal: a backend that’s actually designed.
+
+Add:
+
+Auth (if needed)
+Database tables (content not stored here—CMS already does that)
+Rate limiting
+Logging
+Background jobs (optional)
+This is where Node/Express knowledge becomes leverage—but Next.js can still host your API.
+
+Phase 3 — Optics (GSAP + Three.js)
+Goal: one premium interaction, not a gimmick.
+
+Add:
+
+GSAP scroll animation for one section
+Three.js/R3F for one controlled canvas scene
+Your “North Star” project idea
+A personal site + content hub with:
+
+CMS-managed posts
+reusable “case study” template
+contact pipeline (store leads)
+fast global delivery
+That nails every success metric you listed.
+
+---
+
+Here are Phase 1 test requirements—painfully simple, obvious, and complete. Think of this as your “acceptance tests” checklist.
+
+GPT: 
+0) Repo and Dev Workflow
+Tools: Git + GitHub, Node (or Bun), package manager (pnpm recommended), ESLint, Prettier
+
+Tests
+
+npm run dev starts with zero errors.
+npm run build succeeds.
+npm run lint passes.
+Fresh clone → install → run works in <10 minutes.
+No secrets committed (keys only in env vars).
+
+1) Frontend App Works
+Tools: Next.js (React), TypeScript (recommended)
+
+Tests
+
+All pages load with no broken links.
+Navigation works on mobile + desktop.
+Every button does what its label implies (no dead UI).
+404 page shows for invalid routes.
+No console errors in browser on normal usage.
+
+2) Performance and “Feels Fast”
+Tools: Next.js image optimization, code-splitting, Lighthouse
+
+Tests
+
+Lighthouse Performance ≥ 90 on Home (mobile).
+Home page is interactive quickly: you can click nav within ~1–2s on mobile.
+Images are optimized (not raw 5MB uploads).
+No layout jump when images load (no ugly shifting).
+Animations (if any) don’t lag scrolling.
+
+3) SEO and Share Preview
+Tools: Next.js metadata, sitemap/robots, Open Graph tags
+
+Tests
+
+Each page has a unique title + description.
+Sharing Home in iMessage/Discord shows correct preview image + title.
+sitemap.xml exists.
+robots.txt exists.
+Blog posts have clean URLs (e.g. /insights/my-post).
+
+4) Content is Editable Without Code
+Tools (pick one): Sanity / Contentful / Strapi / Payload / Ghost / Notion-as-CMS (temporary)
+
+Tests
+
+You can add a new blog post in the CMS and it appears on the site without a code change.
+You can edit a post title and see the update on the site.
+Blog index lists posts newest → oldest.
+Post page supports:
+
+title
+published date
+author (optional)
+cover image (optional)
+body content
+Draft content is NOT public (either drafts are hidden or published-only is enforced).
+
+5) Contact Form Actually Delivers
+Tools: Form handling (Next route handler), email provider (Resend/SendGrid/Mailgun) OR Formspree as shortcut
+
+Tests
+
+Required fields are required (can’t submit empty name/email/message).
+Invalid email is rejected.
+Submit success shows a clear confirmation.
+You receive the message in your inbox within 1 minute.
+If email provider is down, user sees a helpful error (not a crash).
+Spam protection exists (at minimum: honeypot or rate limit).
+
+6) Backend (Phase 1 “Light Backend”)
+You don’t need a giant API yet. Phase 1 backend is usually just:
+
+content fetching
+contact form submission
+optional analytics endpoint
+Tools: Next.js Route Handlers (or server actions), Zod for validation
+
+Tests
+
+All API routes return:
+
+correct status codes (200/400/429/500)
+JSON shape is consistent
+Inputs are validated server-side (not just on the client).
+No secrets are exposed to the browser.
+
+7) Deployment + Regional Availability
+Tools: Vercel (simple) or Cloudflare Pages / Netlify
+
+Tests
+
+Deploy from main branch produces a live URL.
+Visiting from a different network/device works (not “works on my phone only”).
+HTTPS is on by default.
+No environment variable missing errors in production.
+You can redeploy with one push.
+
+8) Observability (So You Can Debug Like a Pro)
+Tools: basic logging + error tracking (Sentry optional), analytics (Plausible/GA optional)
+
+Tests
+
+If contact form fails, you can see why (logs or error tracking).
+You can see at least basic traffic (optional).
+No sensitive data is logged.
+
+9) Codebase Cleanliness (Anti-bloat)
+Tools: TypeScript, folder conventions, component library (optional: shadcn/ui)
+
+Tests
+
+Components are organized (not one giant /components mess).
+Reusable UI exists (Button, Input, Card).
+No duplicate logic for fetching / error handling.
+Dependencies are minimal (you can explain why each major dependency exists).
+
+The “Phase 1 Tool List” (full menu)
+You asked not to limit it, so here’s the full set you might use—you won’t use all, but this is the ecosystem:
+
+Framework: Next.js
+Language: TypeScript
+Styling: Tailwind (fast) OR CSS Modules
+UI Kit: shadcn/ui (optional)
+CMS: Sanity / Contentful / Strapi / Payload / Ghost
+Validation: Zod
+Email: Resend / SendGrid / Mailgun / Formspree (shortcut)
+Deployment: Vercel / Cloudflare Pages / Netlify
+Performance/QA: Lighthouse, Web Vitals
+Error tracking: Sentry (optional)
+Analytics: Plausible / GA (optional)
+Testing: Playwright (optional but strong)

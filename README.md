@@ -1,1 +1,9 @@
 # cohort
+
+Cohort is built for operations teams who run shifts and live inside the same recurring problem: coverage breaks don’t announce themselves early, and when they finally surface, they surface as urgency. A call-in. A no-show. A last-minute surge. The work doesn’t pause, but the plan does. In that moment, the burden lands on supervisors and ops—phones ringing, scrambling for a replacement, re-routing work, calming stakeholders, and then updating whoever supplied the labor after the disruption has already hit.
+
+Cohort exists to reverse that timeline. Instead of ops being the first to feel a gap, Cohort pushes accountability upstream so coverage reliability becomes visible before the shift is already breaking. From the user’s perspective, it feels like moving from reactive firefighting to controlled coverage: you can see what’s actually covered, what’s at risk, and what’s being actively handled—without needing to chase people down or run manual checklists just to confirm you’re safe.
+
+The software sits in the middle of the workflow your team already has. It’s not “another system” that creates more admin; it’s an operational layer designed to reduce last-minute scramble. Cohort maintains a ready bench aligned to your environment and site requirements, so when a drop happens, replacement selection and mobilization happens before your floor is exposed. Teams with multiple sites, day/night rotations, and strict fit requirements use Cohort to avoid the worst trade in shift work: trading predictability for speed.
+
+If you already run in-house coverage, use vendors, or a mix of both, Cohort doesn’t require a rip-and-replace. It’s designed to plug into what you’re already doing and remove the specific pain your people actually feel: being the last to know, and the first to absorb the consequences.
