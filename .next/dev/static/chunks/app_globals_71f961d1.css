@@ -29,6 +29,10 @@
   position: relative;
 }
 
+.static {
+  position: static;
+}
+
 .mx-auto {
   margin-inline: auto;
 }

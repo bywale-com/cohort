@@ -39,6 +39,7 @@ export async function generateMetadata({
 }) {
   const resolvedParams = await Promise.resolve(params);
   const post = await getPost(resolvedParams.slug);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cohort.example.com";
 
   if (!post) {
     return {
@@ -46,9 +47,30 @@ export async function generateMetadata({
     };
   }
 
+  const postUrl = `${baseUrl}/insights/${post.slug}`;
+  const ogImage = post.coverImage
+    ? urlFor(post.coverImage).width(1200).height(630).url()
+    : undefined;
+
   return {
     title: `${post.title} - Cohort Insights`,
     description: post.excerpt || "Read more on Cohort Insights",
+    openGraph: {
+      title: post.title,
+      description: post.excerpt || "Read more on Cohort Insights",
+      url: postUrl,
+      siteName: "Cohort",
+      type: "article",
+      publishedTime: post.publishedAt,
+      authors: post.author ? [post.author] : undefined,
+      images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: post.title }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt || "Read more on Cohort Insights",
+      images: ogImage ? [ogImage] : undefined,
+    },
   };
 }
 
@@ -99,7 +121,9 @@ export default async function PostPage({
                 src={urlFor(post.coverImage).width(1200).height(600).url()}
                 alt={post.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 1200px"
                 className="object-cover rounded-lg"
+                priority
               />
             </div>
           )}

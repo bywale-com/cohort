@@ -1,10 +1,27 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { Metadata } from "next";
 
-export const metadata = {
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cohort.example.com";
+
+export const metadata: Metadata = {
   title: "About - Cohort",
   description:
     "Learn more about Cohort and how we help operations teams manage shift coverage.",
+  openGraph: {
+    title: "About - Cohort",
+    description:
+      "Learn more about Cohort and how we help operations teams manage shift coverage.",
+    url: `${baseUrl}/about`,
+    siteName: "Cohort",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "About - Cohort",
+    description:
+      "Learn more about Cohort and how we help operations teams manage shift coverage.",
+  },
 };
 
 export default function About() {

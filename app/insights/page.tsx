@@ -5,9 +5,25 @@ import { client, postsQuery } from "@/lib/sanity";
 import Image from "next/image";
 import { urlFor } from "@/lib/sanity";
 
-export const metadata = {
+import { Metadata } from "next";
+
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cohort.example.com";
+
+export const metadata: Metadata = {
   title: "Insights - Cohort",
   description: "Blog posts and insights about shift coverage management.",
+  openGraph: {
+    title: "Insights - Cohort",
+    description: "Blog posts and insights about shift coverage management.",
+    url: `${baseUrl}/insights`,
+    siteName: "Cohort",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Insights - Cohort",
+    description: "Blog posts and insights about shift coverage management.",
+  },
 };
 
 async function getPosts() {
@@ -101,6 +117,7 @@ export default async function Insights() {
                         src={urlFor(post.coverImage).width(400).height(300).url()}
                         alt={post.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover"
                       />
                     </div>

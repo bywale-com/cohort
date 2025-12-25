@@ -1,9 +1,11 @@
 import { MetadataRoute } from "next";
+import { client, postsQuery } from "@/lib/sanity";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cohort.example.com";
 
-  return [
+  // Static pages
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -29,5 +31,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
   ];
+
+  // Dynamic blog posts
+  let postPages: MetadataRoute.Sitemap = [];
+  
+  try {
+    if (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+      const posts = await client.fetch(postsQuery);
+      
+      if (posts && Array.isArray(posts)) {
+        postPages = posts.map((post: any) => ({
+          url: `${baseUrl}/insights/${post.slug}`,
+          lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+        }));
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching posts for sitemap:", error);
+    // Continue with static pages even if posts fail
+  }
+
+  return [...staticPages, ...postPages];
 }
 

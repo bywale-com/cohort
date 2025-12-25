@@ -1,6 +1,29 @@
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { Metadata } from "next";
+
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cohort.example.com";
+
+export const metadata: Metadata = {
+  title: "Cohort - Shift Coverage Management That Works",
+  description:
+    "Cohort exists to reverse the timeline of coverage breaks. Instead of ops being the first to feel a gap, Cohort pushes accountability upstream so coverage reliability becomes visible before the shift is already breaking.",
+  openGraph: {
+    title: "Cohort - Shift Coverage Management That Works",
+    description:
+      "Cohort exists to reverse the timeline of coverage breaks. Instead of ops being the first to feel a gap, Cohort pushes accountability upstream so coverage reliability becomes visible before the shift is already breaking.",
+    url: baseUrl,
+    siteName: "Cohort",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cohort - Shift Coverage Management That Works",
+    description:
+      "Cohort exists to reverse the timeline of coverage breaks. Instead of ops being the first to feel a gap, Cohort pushes accountability upstream so coverage reliability becomes visible before the shift is already breaking.",
+  },
+};
 
 export default function Home() {
   return (

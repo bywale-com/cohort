@@ -1,10 +1,25 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
+import { Metadata } from "next";
 
-export const metadata = {
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://cohort.example.com";
+
+export const metadata: Metadata = {
   title: "Contact - Cohort",
   description: "Get in touch with the Cohort team.",
+  openGraph: {
+    title: "Contact - Cohort",
+    description: "Get in touch with the Cohort team.",
+    url: `${baseUrl}/contact`,
+    siteName: "Cohort",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Contact - Cohort",
+    description: "Get in touch with the Cohort team.",
+  },
 };
 
 export default function Contact() {
