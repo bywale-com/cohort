@@ -53,15 +53,11 @@ function getClient() {
     }
     return clientInstance;
 }
-const client = new Proxy({}, {
-    get (target, prop) {
-        const actualClient = getClient();
-        if (!actualClient) {
-            throw new Error('Missing NEXT_PUBLIC_SANITY_PROJECT_ID. Please add it to your .env.local file. ' + 'Get your project ID from https://sanity.io/manage or by running: npx sanity init');
-        }
-        return actualClient[prop];
-    }
-});
+const client = (()=>{
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    return getClient();
+})();
 const builder = ("TURBOPACK compile-time truthy", 1) ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$sanity$2f$image$2d$url$2f$lib$2f$index$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__$3c$locals$3e$__["default"])(getClient()) : "TURBOPACK unreachable";
 function urlFor(source) {
     if (!builder) {
@@ -69,20 +65,18 @@ function urlFor(source) {
     }
     return builder.image(source);
 }
-const postsQuery = `*[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
+const postsQuery = `*[_type == "post" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
   _id,
   title,
-  slug,
   author,
   publishedAt,
   excerpt,
   coverImage,
   "slug": slug.current
 }`;
-const postQuery = `*[_type == "post" && slug.current == $slug][0] {
+const postQuery = `*[_type == "post" && !(_id in path("drafts.**")) && slug.current == $slug][0] {
   _id,
   title,
-  slug,
   author,
   publishedAt,
   excerpt,
@@ -119,13 +113,24 @@ const metadata = {
 };
 async function getPosts() {
     // Check if Sanity is configured
+    const projectId = ("TURBOPACK compile-time value", "fc4od7b4");
     if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
     ;
+    console.log("[getPosts] Project ID:", projectId);
+    console.log("[getPosts] Query:", __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$sanity$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["postsQuery"]);
     try {
         const posts = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$sanity$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["client"].fetch(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$sanity$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["postsQuery"]);
+        console.log("[getPosts] Fetched posts count:", posts?.length || 0);
+        if (posts && posts.length > 0) {
+            console.log("[getPosts] First post:", JSON.stringify(posts[0], null, 2));
+        }
         return posts || [];
     } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("[getPosts] Error fetching posts:", error);
+        if (error instanceof Error) {
+            console.error("[getPosts] Error message:", error.message);
+            console.error("[getPosts] Error stack:", error.stack);
+        }
         return [];
     }
 }
@@ -136,7 +141,7 @@ async function Insights() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Navigation$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/insights/page.tsx",
-                lineNumber: 33,
+                lineNumber: 46,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -149,7 +154,7 @@ async function Insights() {
                             children: "Insights"
                         }, void 0, false, {
                             fileName: "[project]/app/insights/page.tsx",
-                            lineNumber: 36,
+                            lineNumber: 49,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -157,7 +162,7 @@ async function Insights() {
                             children: "Thoughts on shift coverage, operations, and building better systems."
                         }, void 0, false, {
                             fileName: "[project]/app/insights/page.tsx",
-                            lineNumber: 37,
+                            lineNumber: 50,
                             columnNumber: 11
                         }, this),
                         posts.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -169,7 +174,7 @@ async function Insights() {
                                         children: "No posts yet. Add content in Sanity Studio!"
                                     }, void 0, false, {
                                         fileName: "[project]/app/insights/page.tsx",
-                                        lineNumber: 65,
+                                        lineNumber: 78,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$react$2d$server$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
@@ -178,14 +183,14 @@ async function Insights() {
                                         children: "Go to Sanity Studio →"
                                     }, void 0, false, {
                                         fileName: "[project]/app/insights/page.tsx",
-                                        lineNumber: 68,
+                                        lineNumber: 81,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true)
                         }, void 0, false, {
                             fileName: "[project]/app/insights/page.tsx",
-                            lineNumber: 41,
+                            lineNumber: 54,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "grid md:grid-cols-2 lg:grid-cols-3 gap-8",
@@ -202,12 +207,12 @@ async function Insights() {
                                                 className: "object-cover"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/insights/page.tsx",
-                                                lineNumber: 87,
+                                                lineNumber: 100,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/insights/page.tsx",
-                                            lineNumber: 86,
+                                            lineNumber: 99,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -218,7 +223,7 @@ async function Insights() {
                                                     children: post.title
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/insights/page.tsx",
-                                                    lineNumber: 96,
+                                                    lineNumber: 109,
                                                     columnNumber: 21
                                                 }, this),
                                                 post.excerpt && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -226,7 +231,7 @@ async function Insights() {
                                                     children: post.excerpt
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/insights/page.tsx",
-                                                    lineNumber: 98,
+                                                    lineNumber: 111,
                                                     columnNumber: 23
                                                 }, this),
                                                 post.publishedAt && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -238,46 +243,46 @@ async function Insights() {
                                                     })
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/insights/page.tsx",
-                                                    lineNumber: 103,
+                                                    lineNumber: 116,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/insights/page.tsx",
-                                            lineNumber: 95,
+                                            lineNumber: 108,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, post._id, true, {
                                     fileName: "[project]/app/insights/page.tsx",
-                                    lineNumber: 80,
+                                    lineNumber: 93,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/app/insights/page.tsx",
-                            lineNumber: 78,
+                            lineNumber: 91,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/insights/page.tsx",
-                    lineNumber: 35,
+                    lineNumber: 48,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/insights/page.tsx",
-                lineNumber: 34,
+                lineNumber: 47,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$Footer$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/app/insights/page.tsx",
-                lineNumber: 118,
+                lineNumber: 131,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/insights/page.tsx",
-        lineNumber: 32,
+        lineNumber: 45,
         columnNumber: 5
     }, this);
 }

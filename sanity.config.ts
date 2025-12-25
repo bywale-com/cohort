@@ -6,7 +6,7 @@ export default defineConfig({
   name: 'default',
   title: 'Cohort CMS',
 
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'fc4od7b4',
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
 
   basePath: '/studio',
@@ -15,6 +15,10 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+  },
+
+  server: {
+    port: 3333,
   },
 })
 

@@ -10,14 +10,24 @@ import Link from "next/link";
 async function getPost(slug: string) {
   // Check if Sanity is configured
   if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    console.log("[getPost] No NEXT_PUBLIC_SANITY_PROJECT_ID found");
     return null;
   }
   
+  console.log("[getPost] Looking for post with slug:", slug);
+  
   try {
     const post = await client.fetch(postQuery, { slug });
+    console.log("[getPost] Found post:", post ? post.title : "null");
+    if (post) {
+      console.log("[getPost] Post slug value:", post.slug);
+    }
     return post;
   } catch (error) {
-    console.error("Error fetching post:", error);
+    console.error("[getPost] Error fetching post:", error);
+    if (error instanceof Error) {
+      console.error("[getPost] Error message:", error.message);
+    }
     return null;
   }
 }
@@ -25,9 +35,10 @@ async function getPost(slug: string) {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }> | { slug: string };
 }) {
-  const post = await getPost(params.slug);
+  const resolvedParams = await Promise.resolve(params);
+  const post = await getPost(resolvedParams.slug);
 
   if (!post) {
     return {
@@ -44,9 +55,10 @@ export async function generateMetadata({
 export default async function PostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }> | { slug: string };
 }) {
-  const post = await getPost(params.slug);
+  const resolvedParams = await Promise.resolve(params);
+  const post = await getPost(resolvedParams.slug);
 
   if (!post) {
     notFound();

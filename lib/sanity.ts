@@ -24,18 +24,20 @@ function getClient() {
   return clientInstance
 }
 
-export const client = new Proxy({} as ReturnType<typeof createClient>, {
-  get(target, prop) {
-    const actualClient = getClient()
-    if (!actualClient) {
-      throw new Error(
-        'Missing NEXT_PUBLIC_SANITY_PROJECT_ID. Please add it to your .env.local file. ' +
-        'Get your project ID from https://sanity.io/manage or by running: npx sanity init'
-      )
-    }
-    return (actualClient as any)[prop]
+// Create client directly instead of using Proxy to avoid potential issues
+export const client = (() => {
+  if (!projectId) {
+    // Return a mock client that will throw on fetch
+    return {
+      fetch: async () => {
+        throw new Error(
+          'Missing NEXT_PUBLIC_SANITY_PROJECT_ID. Please add it to your .env.local file.'
+        )
+      }
+    } as any
   }
-})
+  return getClient()!
+})()
 
 const builder = projectId ? imageUrlBuilder(getClient()!) : null
 
@@ -46,11 +48,10 @@ export function urlFor(source: any) {
   return builder.image(source)
 }
 
-// GROQ query for all posts
-export const postsQuery = `*[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
+// GROQ query for all posts (only published, excluding drafts)
+export const postsQuery = `*[_type == "post" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
   _id,
   title,
-  slug,
   author,
   publishedAt,
   excerpt,
@@ -58,11 +59,10 @@ export const postsQuery = `*[_type == "post" && defined(slug.current)] | order(p
   "slug": slug.current
 }`
 
-// GROQ query for single post
-export const postQuery = `*[_type == "post" && slug.current == $slug][0] {
+// GROQ query for single post (only published, excluding drafts)
+export const postQuery = `*[_type == "post" && !(_id in path("drafts.**")) && slug.current == $slug][0] {
   _id,
   title,
-  slug,
   author,
   publishedAt,
   excerpt,

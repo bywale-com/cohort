@@ -12,15 +12,28 @@ export const metadata = {
 
 async function getPosts() {
   // Check if Sanity is configured
-  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+  if (!projectId) {
+    console.log("[getPosts] No NEXT_PUBLIC_SANITY_PROJECT_ID found");
     return [];
   }
   
+  console.log("[getPosts] Project ID:", projectId);
+  console.log("[getPosts] Query:", postsQuery);
+  
   try {
     const posts = await client.fetch(postsQuery);
+    console.log("[getPosts] Fetched posts count:", posts?.length || 0);
+    if (posts && posts.length > 0) {
+      console.log("[getPosts] First post:", JSON.stringify(posts[0], null, 2));
+    }
     return posts || [];
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    console.error("[getPosts] Error fetching posts:", error);
+    if (error instanceof Error) {
+      console.error("[getPosts] Error message:", error.message);
+      console.error("[getPosts] Error stack:", error.stack);
+    }
     return [];
   }
 }
